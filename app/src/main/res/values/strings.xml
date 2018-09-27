@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">AndroidLevel2</string>
+    <string name="next_homework_button">Следующее ДЗ</string>
+    <string name="drawer_open_text">OPEN</string>
+    <string name="drawer_close_text">CLOSE</string>
+</resources>
