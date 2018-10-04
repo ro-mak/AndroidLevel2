@@ -19,37 +19,26 @@ public class CustomView extends View {
 
     public CustomView(Context context) {
         super(context);
-        paint = new Paint();
-        paint.setColor(Color.CYAN);
-        paint.setStyle(Paint.Style.FILL);
-        paint2 = new Paint();
-        paint2.setColor(Color.BLACK);
-        paint2.setStyle(Paint.Style.FILL);
+        initPaint();
     }
 
     public CustomView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        paint = new Paint();
-        paint.setColor(Color.CYAN);
-        paint.setStyle(Paint.Style.FILL);
-        paint2 = new Paint();
-        paint2.setColor(Color.BLACK);
-        paint2.setStyle(Paint.Style.FILL);
+        initPaint();
     }
 
     public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        paint = new Paint();
-        paint.setColor(Color.CYAN);
-        paint.setStyle(Paint.Style.FILL);
-        paint2 = new Paint();
-        paint2.setColor(Color.BLACK);
-        paint2.setStyle(Paint.Style.FILL);
+        initPaint();
     }
 
     @TargetApi(21)
     public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        initPaint();
+    }
+
+    private void initPaint(){
         paint = new Paint();
         paint.setColor(Color.CYAN);
         paint.setStyle(Paint.Style.FILL);
