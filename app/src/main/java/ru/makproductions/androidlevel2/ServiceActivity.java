@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class ServiceActivity extends AppCompatActivity implements View.OnClickListener {
     private WeatherService weatherService;
@@ -38,17 +39,25 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
         bindSlave.setOnClickListener(this);
         Button unBindSlave = findViewById(R.id.unbind_slave);
         unBindSlave.setOnClickListener(this);
+        Button showWeather = findViewById(R.id.service_get_weather_button);
+        showWeather.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
+
+            case R.id.service_get_weather_button:
+                TextView weatherTextView = findViewById(R.id.weather_text_view);
+                if (weatherService != null && bound)
+                    weatherTextView.setText(weatherService.getWeather());
+                break;
             case R.id.start_slave_business:
                 startService(new Intent(ServiceActivity.this, WeatherService.class));
                 break;
             case R.id.bind_slave:
-                bindService(new Intent(ServiceActivity.this,WeatherService.class),serviceConnection, Context.BIND_AUTO_CREATE);
+                bindService(new Intent(ServiceActivity.this, WeatherService.class), serviceConnection, Context.BIND_AUTO_CREATE);
                 break;
             case R.id.unbind_slave:
                 if (bound) {

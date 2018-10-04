@@ -49,6 +49,10 @@ public class WeatherService extends Service {
         }
     }
 
+    public String getWeather(){
+        return (Math.random()*100) > 50 ? "Плохая" : "Хорошая";
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -79,8 +83,7 @@ public class WeatherService extends Service {
         stackBuilder.addParentStack(ServiceActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        //http://developer.alexanderklimov.ru
+// Есть разница?
         //PendingIntent pendingIntent = PendingIntent.getActivity(this,0,resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pendingIntent);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
