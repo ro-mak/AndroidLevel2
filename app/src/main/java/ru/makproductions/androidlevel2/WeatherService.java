@@ -6,6 +6,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -13,11 +14,12 @@ import android.support.v4.app.NotificationCompat;
 public class WeatherService extends Service {
 
     private static final String SOME_UNIQUE_ID = "SOME_UNIQUE_ID";
+    private static final String WEATHER_SLAVE_NOTIFICATION = "WeatherSlave notification";
     private static int mID = 4123;
 
     @Override
     public void onCreate() {
-        notificationAlert("WeatherSlave notification","At your service, Master!");
+        notificationAlert(WEATHER_SLAVE_NOTIFICATION,"At your service, Master!");
         super.onCreate();
     }
 
@@ -39,21 +41,30 @@ public class WeatherService extends Service {
         }.start();
         return START_REDELIVER_INTENT;
     }
+    private IBinder iBinder = new LocalBinder();
+
+    public class LocalBinder extends Binder {
+        WeatherService getService(){
+            return WeatherService.this;
+        }
+    }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        notificationAlert(WEATHER_SLAVE_NOTIFICATION,"Bound");
+        return iBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
+        notificationAlert(WEATHER_SLAVE_NOTIFICATION,"Unbound");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
-        notificationAlert("WeatherSlave notification","Life for my Master!");
+        notificationAlert(WEATHER_SLAVE_NOTIFICATION,"Life for my Master!");
         super.onDestroy();
     }
 
