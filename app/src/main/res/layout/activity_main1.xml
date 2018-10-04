@@ -5,29 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <ProgressBar
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toLeftOf="parent"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progress_bar"
-        />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sensors_recycler_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/weather"
-        />
+        android:scrollbars="vertical"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"></android.support.v7.widget.RecyclerView>
 
     <Button
-        app:layout_constraintTop_toBottomOf="@id/weather"
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
-        android:id="@+id/next_assignment_button"
+        app:layout_constraintTop_toBottomOf="@id/sensors_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
-        />
+        android:id="@+id/next_slide_button"
+        android:text="@string/next_homework_button" />
 
 </android.support.constraint.ConstraintLayout>

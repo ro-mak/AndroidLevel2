@@ -16,7 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomViewActivity"></activity>
+        <activity android:name=".ServiceActivity"></activity>
+        <service android:name=".WeatherService"
+            android:enabled="true"
+            android:exported="true"
+            >
+        </service>
     </application>
 
 </manifest>
