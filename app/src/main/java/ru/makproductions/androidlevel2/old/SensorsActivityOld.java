@@ -1,4 +1,4 @@
-package ru.makproductions.androidlevel2;
+package ru.makproductions.androidlevel2.old;
 
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -19,9 +19,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ru.makproductions.androidlevel2.R;
+
 import static android.hardware.Sensor.TYPE_ALL;
 
-public class SensorsActivity extends AppCompatActivity {
+public class SensorsActivityOld extends AppCompatActivity {
     private RecyclerView sensorsRecyclerView;
     private RecyclerView.Adapter adapterRecView;
     private RecyclerView.LayoutManager layoutManagerRecView;
@@ -48,7 +50,7 @@ public class SensorsActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SensorsActivity.this, CustomViewActivity.class);
+                Intent intent = new Intent(SensorsActivityOld.this, CustomViewActivityOld.class);
                 startActivity(intent);
             }
         });
@@ -64,7 +66,7 @@ public class SensorsActivity extends AppCompatActivity {
 
         @Override
         public AdapterSensorsRecView.ViewHolderSensorsRecView onCreateViewHolder(ViewGroup parent, int viewType) {
-            RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout, parent, false);
+            RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.zitem_layout_old, parent, false);
             ViewHolderSensorsRecView vh = new ViewHolderSensorsRecView(relativeLayout);
             return vh;
         }

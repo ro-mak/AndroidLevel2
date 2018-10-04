@@ -1,4 +1,4 @@
-package ru.makproductions.androidlevel2;
+package ru.makproductions.androidlevel2.old;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,30 +10,30 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class CustomView extends View {
+public class CustomViewOld extends View {
 
     private Paint paint;
     private Paint paint2;
     private View.OnClickListener listener;
     private boolean pressed;
 
-    public CustomView(Context context) {
+    public CustomViewOld(Context context) {
         super(context);
         initPaint();
     }
 
-    public CustomView(Context context, @Nullable AttributeSet attrs) {
+    public CustomViewOld(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint();
     }
 
-    public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CustomViewOld(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initPaint();
     }
 
     @TargetApi(21)
-    public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CustomViewOld(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initPaint();
     }

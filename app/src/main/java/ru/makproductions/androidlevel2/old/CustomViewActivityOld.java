@@ -1,13 +1,15 @@
-package ru.makproductions.androidlevel2;
+package ru.makproductions.androidlevel2.old;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-public class CustomViewActivity extends AppCompatActivity {
+import ru.makproductions.androidlevel2.R;
+
+public class CustomViewActivityOld extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.custom_view_activity_layout);
+        setContentView(R.layout.zcustom_view_activity_layout_old);
     }
 }
