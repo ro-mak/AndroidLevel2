@@ -1,4 +1,4 @@
-package ru.makproductions.androidlevel2;
+package ru.makproductions.androidlevel2.old;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,9 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import ru.makproductions.androidlevel2.R;
+
 public class ServiceActivity extends AppCompatActivity implements View.OnClickListener {
     private WeatherService weatherService;
-    private boolean bound = false;
+    private boolean bound;
     final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -32,7 +34,7 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.service_activity);
+        setContentView(R.layout.zservice_activity);
         Button startSlaveryButton = findViewById(R.id.start_slave_business);
         startSlaveryButton.setOnClickListener(this);
         Button bindSlave = findViewById(R.id.bind_slave);

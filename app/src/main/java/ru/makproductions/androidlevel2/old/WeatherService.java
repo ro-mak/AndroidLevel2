@@ -1,4 +1,4 @@
-package ru.makproductions.androidlevel2;
+package ru.makproductions.androidlevel2.old;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +10,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+
+import ru.makproductions.androidlevel2.R;
 
 public class WeatherService extends Service {
 

@@ -34,7 +34,7 @@ public class SensorsActivityOld extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.zactivity_main2);
         sensorsRecyclerView = findViewById(R.id.sensors_recycler_view);
         layoutManagerRecView = new LinearLayoutManager(this);
         sensorsRecyclerView.setLayoutManager(layoutManagerRecView);

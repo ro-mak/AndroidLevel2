@@ -1,47 +1,43 @@
 package ru.makproductions.androidlevel2;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.support.v7.widget.SearchView;
+import android.webkit.WebView;
 
-
-public class MainActivity extends AppCompatActivity implements WeatherGetter.WeatherGetterListener {
-
-
-    private ProgressBar progressBar;
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, OkhttpExampleRMproductionsPresents.OnResponseListener {
+    private WebView webView;
+    private SearchView searchView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        WeatherGetter weatherGetter = new WeatherGetter(this);
-        String weather = "Autumn 5C° Rain";
-        weatherGetter.execute(weather);
-        progressBar = findViewById(R.id.progress_bar);
-        Button nextAssignment = findViewById(R.id.next_assignment_button);
-        nextAssignment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-
-    @Override
-    public void checkProgress(Integer updateProgress) {
-        progressBar.setProgress(updateProgress);
+        searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(this);
+        webView = findViewById(R.id.web_view);
     }
 
     @Override
-    public void onComplete(String result) {
-        TextView weatherTextView = findViewById(R.id.weather);
-        weatherTextView.setText(result);
-        progressBar.setAlpha(0);
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        //webView.loadUrl(query);
+        OkhttpExampleRMproductionsPresents okhttp = new OkhttpExampleRMproductionsPresents(this);
+        okhttp.connect(query);
+        return true;
+    }
+
+    @Override
+    public void onNetResponse(String result) {
+        webView.loadData(result,"text/html","UTF-8");
+    }
+
+
+
+
 }
