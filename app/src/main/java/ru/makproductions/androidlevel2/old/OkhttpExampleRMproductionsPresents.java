@@ -1,6 +1,7 @@
-package ru.makproductions.androidlevel2;
+package ru.makproductions.androidlevel2.old;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.IOException;
@@ -11,7 +12,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class OkhttpExampleRMproductionsPresents extends OkHttpClient {
+class OkhttpExampleRMproductionsPresents extends OkHttpClient {
+
+    private static final String TAG = "OkhttpExample";
+
     public interface OnResponseListener {
         void onNetResponse(String result);
     }
@@ -21,23 +25,25 @@ public class OkhttpExampleRMproductionsPresents extends OkHttpClient {
     private OkHttpClient client;
     private Request request;
 
-    public OkhttpExampleRMproductionsPresents(OnResponseListener listener) {
+    OkhttpExampleRMproductionsPresents(OnResponseListener listener) {
         this.listener = listener;
     }
 
-    public String connect(String url) {
+    String connect(String url) {
         client = new OkHttpClient();
         request = new Request.Builder().url(url).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             final Handler handler = new Handler();
+
             @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("GameOver", "onFailure: " + e.getMessage());
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(TAG, "onFailure: " + e.getMessage());
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.body() == null)return;
                 final String result = response.body().string();
                 handler.post(new Runnable() {
                     @Override

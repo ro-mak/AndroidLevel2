@@ -1,5 +1,6 @@
 package ru.makproductions.androidlevel2.old;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -38,7 +39,7 @@ public class CustomViewOld extends View {
         initPaint();
     }
 
-    private void initPaint(){
+    private void initPaint() {
         paint = new Paint();
         paint.setColor(Color.CYAN);
         paint.setStyle(Paint.Style.FILL);
@@ -58,6 +59,7 @@ public class CustomViewOld extends View {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();

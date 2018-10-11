@@ -3,4 +3,26 @@
     <string name="next_homework_button">Следующее ДЗ</string>
     <string name="drawer_open_text">OPEN</string>
     <string name="drawer_close_text">CLOSE</string>
+    <string name="api_base_uri">https://api.openweathermap.org/</string>
+    <string name="try_again">Try again later</string>
+    <string name="app_id">d5699a9f9221ade876095bbb79295acf</string>
+    <string name="weather_units_type">metric</string>
+    <string name="clear_sky_weather_type">clear sky</string>
+    <string name="few_clouds_weather_type">few clouds</string>
+    <string name="scattered_clouds_weather_type">scattered clouds</string>
+    <string name="broken_clouds_weather_type">broken clouds</string>
+    <string name="shower_rain_weather_type">shower rain</string>
+    <string name="rain_weather_type">rain</string>
+    <string name="thunderstorm_weather_type">thunderstorm</string>
+    <string name="snow_weather_type">snow</string>
+    <string name="mist_weather_type">mist</string>
+    <string name="clear_sky_image_path">http://openweathermap.org/img/w/01d.png</string>
+    <string name="few_clouds_image_path">http://openweathermap.org/img/w/02d.png</string>
+    <string name="scattered_clouds_image_path">http://openweathermap.org/img/w/03d.png</string>
+    <string name="broken_clouds_image_path">http://openweathermap.org/img/w/04d.png</string>
+    <string name="shower_rain_image_path">http://openweathermap.org/img/w/09d.png</string>
+    <string name="rain_image_path">http://openweathermap.org/img/w/10d.png</string>
+    <string name="thunderstorm_image_path">http://openweathermap.org/img/w/11d.png</string>
+    <string name="snow_image_path">http://openweathermap.org/img/w/13d.png</string>
+    <string name="mist_image_path">http://openweathermap.org/img/w/50d.png</string>
 </resources>

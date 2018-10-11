@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/constraint_layout"
     >
     <ImageView
         android:contentDescription="@string/app_id"
@@ -13,6 +14,7 @@
         android:alpha="0.5"
         />
     <android.support.v7.widget.SearchView
+        android:elevation="@dimen/elevation"
         android:id="@+id/city_search_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,6 +26,7 @@
 
     <TextView
         android:textSize="@dimen/text_size"
+        android:elevation="@dimen/elevation"
         android:id="@+id/weather_retrofit_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
