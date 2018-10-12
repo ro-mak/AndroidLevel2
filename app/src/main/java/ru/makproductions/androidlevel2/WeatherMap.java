@@ -15,19 +15,19 @@ public class WeatherMap {
     @SerializedName("sys")
     private Sys sys;
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public void setMain(Main main) {
+    void setMain(Main main) {
         this.main = main;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public void setSys(Sys sys) {
+    void setSys(Sys sys) {
         this.sys = sys;
     }
 
@@ -35,11 +35,11 @@ public class WeatherMap {
         return main;
     }
 
-    public Weather[] getWeather() {
+    Weather[] getWeather() {
         return weather;
     }
 
-    public void setWeather(Weather[] weather) {
+    void setWeather(Weather[] weather) {
         this.weather = weather;
     }
 
@@ -47,7 +47,15 @@ public class WeatherMap {
         return sys;
     }
 
-    public class Main {
+    double getTemp() {
+        return main.getTemp();
+    }
+
+    void setTemp(double temp) {
+        main.setTemp(temp);
+    }
+
+    private class Main {
         @SerializedName("temp")
         private double temp;
 
@@ -55,13 +63,20 @@ public class WeatherMap {
             return temp;
         }
 
-        public void setTemp(double temp) {
+        void setTemp(double temp) {
             this.temp = temp;
         }
     }
 
+    String getCountry() {
+        return sys.getCountry();
+    }
 
-    public class Sys {
+    void setCountry(String country) {
+        sys.setCountry(country);
+    }
+
+    private class Sys {
         @SerializedName("country")
         private String country;
 
@@ -69,20 +84,29 @@ public class WeatherMap {
             return country;
         }
 
-        public void setCountry(String country) {
+        void setCountry(String country) {
             this.country = country;
         }
     }
 
-    public class Weather {
+
+    String getDescription() {
+        return weather[0].getDescription();
+    }
+
+    void setDescription(String description) {
+        weather[0].setDescription(description);
+    }
+
+    private class Weather {
         @SerializedName("description")
         private String description;
 
-        public String getDescription() {
+        String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
+        void setDescription(String description) {
             this.description = description;
         }
     }

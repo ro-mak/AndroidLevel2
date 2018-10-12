@@ -1,6 +1,5 @@
 package ru.makproductions.androidlevel2;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -94,12 +93,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             WeatherMap body = response.body();
                             weather.append(body.getName());
                             weather.append(COMMA_SPACE);
-                            weather.append(body.getSys().getCountry());
+                            weather.append(body.getCountry());
                             weather.append(TEMPERATURE_IS);
-                            weather.append(body.getMain().getTemp());
+                            weather.append(body.getTemp());
                             weather.append(CELCIUS);
                             weatherTextView.setText(weather.toString());
-                            loadBackground(body.getWeather()[0].getDescription());
+                            loadBackground(body.getDescription());
                         }
                     }
 
