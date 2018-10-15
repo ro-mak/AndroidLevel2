@@ -1,11 +1,14 @@
 package ru.makproductions.androidlevel2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static final String CELCIUS = " C°";
     private SearchView citySearchView;
     private TextView weatherTextView;
+    private DataBaseSaver dataBaseSaver;
+    private DataBaseReader dataBaseReader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +39,105 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         weatherTextView = findViewById(R.id.weather_retrofit_text_view);
         initRetrofit();
         citySearchView.setOnQueryTextListener(this);
+        dataBaseSaver = new DataBaseSaver(this);
+        dataBaseSaver.openDatabase();
+        dataBaseReader = dataBaseSaver.getDataBaseReader();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.history_option) {
+            Intent intent = new Intent(this, HistoryActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void saveToDataBase(String city, String weather) {
+        if (!searchCity(city, weather)) {
+            dataBaseSaver.saveCityWeatherItem(city, weather);
+        }
+        Log.e(TAG, "saveToDataBase: " + city + " saved");
+    }
+
+    private boolean searchCity(String city, String weather) {
+        for (int i = 0; i < dataBaseReader.getNumberOfItems(); i++) {
+            dataBaseReader.readDataInPosition(i);
+            CityWeatherItem cityWeatherItem = dataBaseReader.cursorToCityWeatherItem();
+            if (cityWeatherItem.getName().equals(city)) {
+                dataBaseSaver.changeCityWeatherItem(cityWeatherItem, city, weather);
+                dataBaseReader.refreshCursor();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private OpenWeatherRetrofit openWeatherRetrofit;
+
+    private void initRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.api_base_uri))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        openWeatherRetrofit = retrofit.create(OpenWeatherRetrofit.class);
+    }
+
+    private void getWeather(String city, String appId) {
+        openWeatherRetrofit.loadWeather(city, appId, getString(R.string.weather_units_type))
+                .enqueue(new Callback<WeatherMap>() {
+                    @Override
+                    public void onResponse(@NonNull Call<WeatherMap> call, @NonNull Response<WeatherMap> response) {
+                        if (response.body() != null) {
+                            StringBuilder weatherGUI = new StringBuilder();
+                            WeatherMap body = response.body();
+                            String cityName = body.getName();
+                            String description = body.getDescription();
+                            StringBuilder weatherDatabase = new StringBuilder();
+                            weatherDatabase.append(body.getTemp());
+                            weatherDatabase.append(CELCIUS);
+                            weatherDatabase.append(COMMA_SPACE);
+                            weatherDatabase.append(description);
+
+                            weatherGUI.append(cityName);
+                            weatherGUI.append(COMMA_SPACE);
+                            weatherGUI.append(body.getCountry());
+                            weatherGUI.append(TEMPERATURE_IS);
+                            weatherGUI.append(weatherDatabase.toString());
+
+                            weatherTextView.setText(weatherGUI.toString());
+                            saveToDataBase(cityName, weatherDatabase.toString());
+                            loadBackground(description);
+                            Log.e(TAG, "onResponse: " + "Responded to " + cityName);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<WeatherMap> call, @NonNull Throwable t) {
+                        weatherTextView.setText(R.string.try_again);
+                        Log.e(TAG, "onFailure: " + t.getMessage());
+                    }
+                });
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.e(TAG, "onQueryTextSubmit: " + query + " submitted");
+        getWeather(query, getString(R.string.app_id));
+        citySearchView.clearFocus();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
     private void loadBackground(String weatherType) {
@@ -71,53 +175,5 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         } else {
             Log.d(TAG, "loadBackground: " + weatherType);
         }
-    }
-
-    private OpenWeatherRetrofit openWeatherRetrofit;
-
-    private void initRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.api_base_uri))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        openWeatherRetrofit = retrofit.create(OpenWeatherRetrofit.class);
-    }
-
-    private void getWeather(String city, String appId) {
-        openWeatherRetrofit.loadWeather(city, appId, getString(R.string.weather_units_type))
-                .enqueue(new Callback<WeatherMap>() {
-                    @Override
-                    public void onResponse(@NonNull Call<WeatherMap> call, @NonNull Response<WeatherMap> response) {
-                        if (response.body() != null) {
-                            StringBuilder weather = new StringBuilder();
-                            WeatherMap body = response.body();
-                            weather.append(body.getName());
-                            weather.append(COMMA_SPACE);
-                            weather.append(body.getCountry());
-                            weather.append(TEMPERATURE_IS);
-                            weather.append(body.getTemp());
-                            weather.append(CELCIUS);
-                            weatherTextView.setText(weather.toString());
-                            loadBackground(body.getDescription());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<WeatherMap> call, @NonNull Throwable t) {
-                        weatherTextView.setText(R.string.try_again);
-                        Log.e(TAG, "onFailure: " + t.getMessage());
-                    }
-                });
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        getWeather(query, getString(R.string.app_id));
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 }

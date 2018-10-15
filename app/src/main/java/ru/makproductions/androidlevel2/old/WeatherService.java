@@ -90,6 +90,6 @@ public class WeatherService extends Service {
         //PendingIntent pendingIntent = PendingIntent.getActivity(this,0,resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pendingIntent);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if(manager!=null)manager.notify(mID++, builder.build());
+        if (manager != null) manager.notify(mID++, builder.build());
     }
 }

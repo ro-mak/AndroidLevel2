@@ -43,7 +43,7 @@ class OkhttpExampleRMproductionsPresents extends OkHttpClient {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.body() == null)return;
+                if (response.body() == null) return;
                 final String result = response.body().string();
                 handler.post(new Runnable() {
                     @Override

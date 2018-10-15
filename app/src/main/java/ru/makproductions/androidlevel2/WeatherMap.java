@@ -2,7 +2,7 @@ package ru.makproductions.androidlevel2;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WeatherMap {
+class WeatherMap {
 
     @SerializedName("weather")
     private Weather[] weather;

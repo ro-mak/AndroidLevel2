@@ -25,4 +25,6 @@
     <string name="thunderstorm_image_path">http://openweathermap.org/img/w/11d.png</string>
     <string name="snow_image_path">http://openweathermap.org/img/w/13d.png</string>
     <string name="mist_image_path">http://openweathermap.org/img/w/50d.png</string>
+    <string name="history">History</string>
+    <string name="clear_history">Clear history</string>
 </resources>
