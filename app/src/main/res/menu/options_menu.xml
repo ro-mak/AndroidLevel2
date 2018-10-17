@@ -3,4 +3,8 @@
     <item android:title="@string/history"
         android:id="@+id/history_option"
         />
+    <group android:checkableBehavior="single">
+        <item android:title="@string/get_weather_by_sms" android:id="@+id/get_weather_by_sms" />
+        <item android:title="@string/get_weather_by_internet" android:id="@+id/get_weather_by_internet" android:checked="true"/>
+    </group>
 </menu>

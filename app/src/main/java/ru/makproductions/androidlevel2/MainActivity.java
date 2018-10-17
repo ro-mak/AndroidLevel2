@@ -1,6 +1,7 @@
 package ru.makproductions.androidlevel2;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, SMSWeatherReceiver.WeatherListener {
 
     public static final String TAG = "MainActivity";
     public static final String COMMA_SPACE = ", ";
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private TextView weatherTextView;
     private DataBaseSaver dataBaseSaver;
     private DataBaseReader dataBaseReader;
+    private boolean isLoadedThroughInternet = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,13 +44,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dataBaseSaver = new DataBaseSaver(this);
         dataBaseSaver.openDatabase();
         dataBaseReader = dataBaseSaver.getDataBaseReader();
+        SMSWeatherReceiver smsWeatherReceiver = new SMSWeatherReceiver(this);
+        IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        registerReceiver(smsWeatherReceiver,intentFilter);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.history_option) {
+        int id = item.getItemId();
+        if (id == R.id.history_option) {
             Intent intent = new Intent(this, HistoryActivity.class);
             startActivity(intent);
+        } else if (id == R.id.get_weather_by_internet) {
+            item.setChecked(true);
+            isLoadedThroughInternet = true;
+        } else if (id == R.id.get_weather_by_sms) {
+            item.setChecked(true);
+            isLoadedThroughInternet = false;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,7 +142,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextSubmit(String query) {
         Log.e(TAG, "onQueryTextSubmit: " + query + " submitted");
-        getWeather(query, getString(R.string.app_id));
+        if (isLoadedThroughInternet) {
+            getWeather(query, getString(R.string.app_id));
+        } else {
+            SMSWeatherSender smsWeatherSender = new SMSWeatherSender();
+            smsWeatherSender.askForWeather(this);
+        }
         citySearchView.clearFocus();
         return true;
     }
@@ -175,5 +192,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         } else {
             Log.d(TAG, "loadBackground: " + weatherType);
         }
+    }
+
+    @Override
+    public void updateWeather(String weather) {
+        weatherTextView.setText(weather);
     }
 }

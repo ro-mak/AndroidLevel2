@@ -27,4 +27,6 @@
     <string name="mist_image_path">http://openweathermap.org/img/w/50d.png</string>
     <string name="history">History</string>
     <string name="clear_history">Clear history</string>
+    <string name="get_weather_by_sms">Get weather by SMS</string>
+    <string name="get_weather_by_internet">Get weather by Internet</string>
 </resources>
