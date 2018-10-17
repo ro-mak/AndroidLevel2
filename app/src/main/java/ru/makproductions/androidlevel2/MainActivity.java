@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         SMSWeatherReceiver smsWeatherReceiver = new SMSWeatherReceiver(this);
         IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         registerReceiver(smsWeatherReceiver,intentFilter);
+       // FirebaseMessaging.getInstance().subscribeToTopic("Hello");
     }
 
     @Override

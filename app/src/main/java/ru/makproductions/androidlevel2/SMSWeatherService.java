@@ -1,6 +1,5 @@
 package ru.makproductions.androidlevel2;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,8 +10,6 @@ import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class SMSWeatherService extends Service {
 
