@@ -1,10 +1,13 @@
 package ru.makproductions.androidlevel2;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -46,8 +49,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         dataBaseReader = dataBaseSaver.getDataBaseReader();
         SMSWeatherReceiver smsWeatherReceiver = new SMSWeatherReceiver(this);
         IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        registerReceiver(smsWeatherReceiver,intentFilter);
-       // FirebaseMessaging.getInstance().subscribeToTopic("Hello");
+        registerReceiver(smsWeatherReceiver, intentFilter);
+        showLocalWeatherIfAllowed();
+        // FirebaseMessaging.getInstance().subscribeToTopic("Hello");
+    }
+
+    private void showLocalWeatherIfAllowed() {
+        int latitude = 0;
+        int longtitude = 0;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            requestGeographicCoordinates();
+            getWeatherByCoordinates(latitude, longtitude, getString(R.string.app_id));
+        }else{
+            requestGeoLocationPermissions();
+        }
+    }
+
+    private void requestGeoLocationPermissions() {
+
+    }
+
+    private void requestGeographicCoordinates() {
+
     }
 
     @Override
@@ -108,28 +132,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .enqueue(new Callback<WeatherMap>() {
                     @Override
                     public void onResponse(@NonNull Call<WeatherMap> call, @NonNull Response<WeatherMap> response) {
-                        if (response.body() != null) {
-                            StringBuilder weatherGUI = new StringBuilder();
-                            WeatherMap body = response.body();
-                            String cityName = body.getName();
-                            String description = body.getDescription();
-                            StringBuilder weatherDatabase = new StringBuilder();
-                            weatherDatabase.append(body.getTemp());
-                            weatherDatabase.append(CELCIUS);
-                            weatherDatabase.append(COMMA_SPACE);
-                            weatherDatabase.append(description);
-
-                            weatherGUI.append(cityName);
-                            weatherGUI.append(COMMA_SPACE);
-                            weatherGUI.append(body.getCountry());
-                            weatherGUI.append(TEMPERATURE_IS);
-                            weatherGUI.append(weatherDatabase.toString());
-
-                            weatherTextView.setText(weatherGUI.toString());
-                            saveToDataBase(cityName, weatherDatabase.toString());
-                            loadBackground(description);
-                            Log.e(TAG, "onResponse: " + "Responded to " + cityName);
-                        }
+                        onRetrofitResponse(response);
                     }
 
                     @Override
@@ -138,6 +141,47 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         Log.e(TAG, "onFailure: " + t.getMessage());
                     }
                 });
+    }
+
+    private void getWeatherByCoordinates(Integer latitude, Integer longtitude, String appId) {
+        openWeatherRetrofit.loadWeatherByCoordinates(latitude, longtitude, appId, getString(R.string.weather_units_type))
+                .enqueue(new Callback<WeatherMap>() {
+                    @Override
+                    public void onResponse(@NonNull Call<WeatherMap> call, @NonNull Response<WeatherMap> response) {
+                        onRetrofitResponse(response);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<WeatherMap> call, @NonNull Throwable t) {
+                        weatherTextView.setText(R.string.try_again);
+                        Log.e(TAG, "onFailure: " + t.getMessage());
+                    }
+                });
+    }
+
+    private void onRetrofitResponse(Response<WeatherMap> response) {
+        if (response.body() != null) {
+            StringBuilder weatherGUI = new StringBuilder();
+            WeatherMap body = response.body();
+            String cityName = body.getName();
+            String description = body.getDescription();
+            StringBuilder weatherDatabase = new StringBuilder();
+            weatherDatabase.append(body.getTemp());
+            weatherDatabase.append(CELCIUS);
+            weatherDatabase.append(COMMA_SPACE);
+            weatherDatabase.append(description);
+
+            weatherGUI.append(cityName);
+            weatherGUI.append(COMMA_SPACE);
+            weatherGUI.append(body.getCountry());
+            weatherGUI.append(TEMPERATURE_IS);
+            weatherGUI.append(weatherDatabase.toString());
+
+            weatherTextView.setText(weatherGUI.toString());
+            saveToDataBase(cityName, weatherDatabase.toString());
+            loadBackground(description);
+            Log.e(TAG, "onResponse: " + "Responded to " + cityName);
+        }
     }
 
     @Override
