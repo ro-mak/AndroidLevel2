@@ -1,9 +1,14 @@
 package ru.makproductions.androidlevel2;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,11 +35,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static final String COMMA_SPACE = ", ";
     public static final String TEMPERATURE_IS = " temperature is: ";
     public static final String CELCIUS = " C°";
+    public static final int PERMISSIONS_REQUEST_CODE = 1234;
     private SearchView citySearchView;
     private TextView weatherTextView;
     private DataBaseSaver dataBaseSaver;
     private DataBaseReader dataBaseReader;
     private boolean isLoadedThroughInternet = true;
+    private LocationManager locationManager;
+    private String geoProvider;
+    private double latitude;
+    private double longtitude;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,23 +65,70 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void showLocalWeatherIfAllowed() {
-        int latitude = 0;
-        int longtitude = 0;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (checkPermissions()) {
             requestGeographicCoordinates();
-            getWeatherByCoordinates(latitude, longtitude, getString(R.string.app_id));
-        }else{
+        } else {
             requestGeoLocationPermissions();
         }
     }
 
-    private void requestGeoLocationPermissions() {
-
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestGeographicCoordinates() {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length == 2
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED ||
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                requestGeographicCoordinates();
+            }
+        }
+    }
 
+    private void requestGeoLocationPermissions() {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestGeographicCoordinates() {
+        if (!checkPermissions()) return;
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        geoProvider = locationManager.getBestProvider(criteria, true);
+        if (geoProvider != null) {
+            locationManager.requestLocationUpdates(geoProvider, 10000, 10, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    latitude = location.getLatitude();
+                    longtitude = location.getLongitude();
+                    Log.e(TAG, "onLocationChanged: lat " + latitude);
+                    Log.e(TAG, "onLocationChanged: lon " + longtitude);
+                    getWeatherByCoordinates(latitude, longtitude, getString(R.string.app_id));
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -143,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 });
     }
 
-    private void getWeatherByCoordinates(Integer latitude, Integer longtitude, String appId) {
+    private void getWeatherByCoordinates(Double latitude, Double longtitude, String appId) {
         openWeatherRetrofit.loadWeatherByCoordinates(latitude, longtitude, appId, getString(R.string.weather_units_type))
                 .enqueue(new Callback<WeatherMap>() {
                     @Override
